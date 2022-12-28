@@ -1,0 +1,45 @@
+#screen {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#container {
+    width: 100%;
+    max-width: 1200px;
+
+
+    /* Teste */
+    min-height: 3000px;
+
+
+    margin: 0 auto;
+    /* background-color: green; */
+}
+.dark-mode {
+    background-color: var(--bs-dark);
+    color: var(--bs-light);
+}
+#screen #card {
+    background-color: var(--bs-secondary-bg);
+}
+.justify_flex_end {
+    justify-content: flex-end;
+}
+#dark_mode_button {
+    margin-left: 15px;
+}
+#screen #nav_menu {
+    background-color: var(--bs-secondary-bg) !important;
+    width: 100%;
+}
+
+
+@media (max-width: 991px) {
+  #dark_mode_button {
+    /* regra de estilo para telas pequenas */
+    margin-left: 0;
+    margin-top: 15px;
+  }
+}
+
