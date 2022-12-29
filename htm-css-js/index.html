@@ -16,15 +16,27 @@
 </head>
 
 <body>
+    <!-- Todas as classes que existem no bootstrap: https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css -->
+    <!-- Se não existir uma em especifico basta criar seguindo a nomeclatura de criação de classe no bootstrap. -->
+
     <div id="screen" class="dark-mode">
+        <div id="loading" class="fixed-top d-flex justify-content-center align-items-center fs-1">Carregando...</div>
+
+
+
+
         <div id="container">
-            <nav id="nav_menu" class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+            <nav id="nav_menu" class="navbar navbar-expand-lg bg-body-tertiary fixed-top" data-bs-theme="dark">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="#">Navbar</a>
+                    <a class="navbar-brand" href="#">MyAnime</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
+                        <span id="my-hamburguer-icon" class="dark-mode">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </span>
                     </button>
                     <div class="collapse navbar-collapse justify_flex_end" id="navbarSupportedContent">
                         <ul class="navbar-nav mb-2 mb-lg-0">
@@ -60,24 +72,82 @@
                     </div>
                 </div>
             </nav>
-            <div id="card" class="card" style="width: 18rem;" data-bs-theme="dark">
-                <img src="..." class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                        card's content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
+            <section class="d-flex justify-content-center min-vh-100 p-top-96 flex-wrap gap-3">
+                <div id="card" class="card h-100 dark-mode" style="width: 18rem;" data-bs-theme="dark">
+                    <img id="pokemon_image" src="..." class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 id="card_title" class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
+                            the
+                            card's content.</p>
+                        <button id="next_button" href="#" class="btn btn-primary">></button>
+                    </div>
                 </div>
-            </div>
+            </section>
         </div>
     </div>
 
     <script>
+        let next_pokemon_url;
+        const loading = document.querySelector("#loading");
+        const card_title = document.querySelector("#card_title");
+        const pokemon_image = document.querySelector("#pokemon_image");
+
+        const showLoading = () => {
+            loading.classList.toggle("loading");
+        };
+
+        const loadPokemon = async (url) => {
+            showLoading();
+
+            try {
+                const resp1 = await fetch(url);
+                const data1 = await resp1.json();
+                card_title.textContent = data1.results[0].name;
+
+                next_pokemon_url = data1.next;
+                pokemon_data = data1.results[0].url;
+
+                const resp2 = await fetch(pokemon_data);
+                const data2 = await resp2.json();
+
+                pokemon_image.setAttribute('src', data2.sprites.front_default);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                showLoading();
+            }
+        };
+
+        (async () => {
+            await loadPokemon('https://pokeapi.co/api/v2/pokemon?offset=0&limit=1');
+        })();
+
+        const next_button = document.querySelector("#next_button");
+        next_button.addEventListener('click', async () => {
+            await loadPokemon(next_pokemon_url);
+        });
+
+
+
+
+
+
+
+
+
+
+
+
         const button = document.querySelector("#dark_mode_button");
         const my_screen = document.querySelector("#screen");
+        const card = document.querySelector("#card");
+        const my_hamburger_icon = document.querySelector("#my-hamburguer-icon");
         const data_bs_theme = document.querySelectorAll("[data-bs-theme]")
         const switchDarkMode = button.addEventListener('click', () => {
             my_screen.classList.toggle("dark-mode");
+            my_hamburger_icon.classList.toggle("dark-mode");
+            card.classList.toggle("dark-mode");
             const currentTheme = data_bs_theme[0].getAttribute('data-bs-theme');
             const setTheme = (el, theme) => {
                 el.setAttribute('data-bs-theme', theme);
